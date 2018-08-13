@@ -5,10 +5,20 @@ use std::fs::File;
 use std::thread;
 use std::time::Duration;
 
+extern crate hello;
+use hello::ThreadPool;
+
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
     let pool = ThreadPool::new(4);
 
+    let pool = match pool {
+        Ok(ThreadPool) => ThreadPool,
+        Err(ThreadPoolError) => {
+            panic!("Argument must be greater than 0")
+        },
+    };
+    
     for stream in listener.incoming() {
         let stream = stream.unwrap();
 
